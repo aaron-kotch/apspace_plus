@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.apspace_plus">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="apspace_plus"
         android:icon="@mipmap/ic_launcher">

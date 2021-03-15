@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -125,8 +126,11 @@ class FrontPage extends StatelessWidget {
                           letterSpacing: 0.25,
                         ),),
                       onPressed: () {
-                        //login();
-                        Navigator.popAndPushNamed(context, '/home');
+                        Navigator.push(context, PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            curve: Curves.easeInOut,
+                            child: Home()),
+                        );
                       },
                     ),
                   )

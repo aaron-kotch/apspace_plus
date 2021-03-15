@@ -8,6 +8,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 
 List<Course> courseList = [];
 // ignore: must_be_immutable
@@ -20,6 +22,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   Future startGet;
+  var cData;
 
   @override
   void initState() {
@@ -115,26 +118,41 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left: 6.5.w, right: 6.5.w),
+                  padding: EdgeInsets.only(left: 6.5.w, right: 6.5.w, bottom: 4.0.h),
                   child: Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(top: 4.0.h, bottom: 4.0.h, left: 4.0.h),
-                      child: FutureBuilder<List<Album>>(
-                          future: fetchAlbum(http.Client()),
-                          builder: (context, snapshot){
+                      padding: EdgeInsets.only(top: 3.0.h, bottom: 2.0.h, left: 3.0.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 3.0.h),
+                            child: Text(DateFormat('EEEE, dd MMMM').format(DateTime.now()),
+                              style: TextStyle(
+                                color: Colors.grey[900],
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                letterSpacing: 0.25,
+                              ),
+                            ),
+                          ),
+                          FutureBuilder<List<Album>>(
+                              future: fetchAlbum(http.Client()),
+                              builder: (context, snapshot){
+                                return snapshot.hasData
+                                    ? AlbumsList()
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 24, bottom: 24),
+                                        child: Center(child: CircularProgressIndicator()));
 
-                            if (snapshot.hasError) print(snapshot.error);
-                            return snapshot.hasData
-                                ? AlbumsList(albums: snapshot.data)
-                                : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
-                          }),
+                              }),
+                        ],
+                      )
                     ),
                   ),
                 ),
@@ -159,9 +177,8 @@ class _HomeState extends State<Home> {
                             letterSpacing: 0.25,
                           ),),
                         onPressed: () {
-                          //check();
-                          processData();
-
+                          checkDate();
+                          check();
                         },
                       ),
                     )
@@ -176,7 +193,7 @@ class _HomeState extends State<Home> {
 
   check() {
 
-    print(courseList[0].courseCode);
+    print(courseList[0].subjectCode);
 
   }
 }
@@ -226,11 +243,10 @@ Future<http.Response> login() async {
 
 }
 
+checkDate() {
 
-class Module extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+  if(DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "MONDAY") {
+    print("monday");
   }
-}
 
+}
