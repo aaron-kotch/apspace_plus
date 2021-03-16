@@ -1,11 +1,8 @@
 import 'package:apspace_plus/page/home.dart';
-import 'package:apspace_plus/process/getCourse.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -49,8 +46,13 @@ class MyApp extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class FrontPage extends StatelessWidget {
+class FrontPage extends StatefulWidget {
 
+  @override
+  _FrontPageState createState() => _FrontPageState();
+}
+
+class _FrontPageState extends State<FrontPage> {
   @override
   Widget build(BuildContext context) {
 
@@ -126,11 +128,9 @@ class FrontPage extends StatelessWidget {
                           letterSpacing: 0.25,
                         ),),
                       onPressed: () {
-                        Navigator.push(context, PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            curve: Curves.easeInOut,
-                            child: Home()),
-                        );
+                        Future.delayed(const Duration(milliseconds: 200), () {
+                          Navigator.of(context).push(_toHome());
+                        });
                       },
                     ),
                   )
@@ -142,6 +142,25 @@ class FrontPage extends StatelessWidget {
     );
   }
 
+  Route _toHome() {
+
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => Home(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.easeOutCirc;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+              position:animation.drive(tween),
+              child: child,
+          );
+        }
+    );
+
+  }
 }
 
 

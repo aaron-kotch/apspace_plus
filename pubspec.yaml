@@ -61,10 +61,20 @@ flutter:
         - asset: lib/fonts/OpenSans/OpenSans-SemiBold.ttf
         - asset: lib/fonts/OpenSans/OpenSans-Bold.ttf
         - asset: lib/fonts/OpenSans/OpenSans-ExtraBold.ttf
+    - family: Montserrat
+      fonts:
+        - asset: lib/fonts/Montserrat/Montserrat-Thin.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-ExtraLight.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Light.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Medium.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Semibold.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Bold.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-ExtraBold.ttf
+        - asset: lib/fonts/Montserrat/Montserrat-Black.ttf
 
   assets:
-    - lib/images/stars.png
-    - lib/images/flat apu.png
+    - lib/images/
 
 
   #100: Thin, Hairline, Ultra-light, Extra-light

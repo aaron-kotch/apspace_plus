@@ -48,12 +48,14 @@ class _HomeState extends State<Home> {
                   child: Center(
                       child: CircleAvatar(
                         radius: 15.0.w,
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.orange[100],
                         child: CircleAvatar(
-                          radius: 14.0.w,
-                          backgroundImage: AssetImage('lib/images/stars.png'),
+                          backgroundColor: Colors.orange[100],
+                          radius: 12.0.w,
+                          backgroundImage: AssetImage('lib/images/coffee.png'),
                         ),
-                      )),
+                      )
+                  ),
                 ),
                 Container(
                   child: Text(
@@ -105,7 +107,7 @@ class _HomeState extends State<Home> {
                     )
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 2.5.h, bottom: 0.5.h, left: 6.5.w, right: 6.5.w),
+                  padding: EdgeInsets.only(top: 2.5.h, bottom: 0.5.h, left: 7.0.w, right: 6.5.w),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Schedule",
@@ -125,7 +127,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(top: 3.0.h, bottom: 2.0.h, left: 3.0.h),
+                      padding: EdgeInsets.only(top: 3.0.h, bottom: 4.0.h, left: 3.0.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -147,12 +149,12 @@ class _HomeState extends State<Home> {
                                 return snapshot.hasData
                                     ? AlbumsList()
                                     : Padding(
-                                        padding: EdgeInsets.only(top: 24, bottom: 24),
-                                        child: Center(child: CircularProgressIndicator()));
+                                    padding: EdgeInsets.only(top: 24, bottom: 24),
+                                    child: Center(child: CircularProgressIndicator()));
 
                               }),
                         ],
-                      )
+                      ),
                     ),
                   ),
                 ),
@@ -187,13 +189,13 @@ class _HomeState extends State<Home> {
             ), //pfp
           );
         },
-      )
+      ),
     );
   }
 
   check() {
 
-    print(courseList[0].subjectCode);
+    print(DateTime.now().day + 2);
 
   }
 }
@@ -245,8 +247,19 @@ Future<http.Response> login() async {
 
 checkDate() {
 
-  if(DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "MONDAY") {
-    print("monday");
+  if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SATURDAY") {
+    print(DateTime.now().day + 2);
+  }
+  else if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SUNDAY") {
+    print(DateTime.now().day + 1);
+  }
+  else {
+    print(DateTime.now().day);
+    print("its weekday");
   }
 
+  print(DateFormat('MMM-yy').format(DateTime.now()).toUpperCase());
+
 }
+
+//TODO: Navbar, timetable, attendance, apcard.

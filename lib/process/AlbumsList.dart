@@ -37,9 +37,6 @@ class _AlbumsListState extends State<AlbumsList> {
     return FutureBuilder<Map<String, List>>(
       future: pData,
       builder: (context, snapshot) {
-
-        print("sdata = " + snapshot.data.toString());
-
         return snapshot.hasData
             ? AnimatedSwitcher(
                 duration: Duration(seconds: 1),
@@ -76,8 +73,8 @@ class _AlbumsListState extends State<AlbumsList> {
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontFamily: 'OpenSans',
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
                                           ),
                                         ),
                                       ]
@@ -103,7 +100,7 @@ class _AlbumsListState extends State<AlbumsList> {
                                     ),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.only(left: 24, right: 24),
+                                    padding: EdgeInsets.only(left: 24, right: 24, bottom: 6),
                                     width: 60.0.w,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,29 +116,32 @@ class _AlbumsListState extends State<AlbumsList> {
                                             ),
                                           ),
                                         ),
-                                        Material(
-                                            color: snapshot.data['type'][index].toString().contains("LAB")
-                                                ? Colors.pink[500]
-                                                : Colors.deepPurple[400],
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(50)
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                                              child: Text(
-                                                snapshot.data['type'][index],
-                                                style: TextStyle(
-                                                  fontFamily: 'OpenSans',
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 10,
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.25,
-                                                ),
-                                              ),
-                                            )
-                                        )
                                       ],
                                     ),
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.only(left: 24, right: 24),
+                                      child: Material(
+                                          color: snapshot.data['type'][index].toString().contains("LAB")
+                                              ? Colors.pink[500]
+                                              : Colors.deepPurple[400],
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                                            child: Text(
+                                              snapshot.data['type'][index],
+                                              style: TextStyle(
+                                                fontFamily: 'OpenSans',
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                                letterSpacing: 0.25,
+                                              ),
+                                            ),
+                                          )
+                                      )
                                   )
                                 ],
                               ),
@@ -168,7 +168,6 @@ Future<Map<String, List>> processData() async{
   var mMap;
 
   var bData = await fetchAlbum(http.Client()).then((value) {
-    print("val = " + value[0].intake);
 
     for (int i = 0; i < value.length; i++) {
 
@@ -180,30 +179,37 @@ Future<Map<String, List>> processData() async{
 
     for (int i = 0; i < list.length; i++) {
 
-      modCode.add(
-          list[i].moduleId.split(" ")[0].split("-")[0] + "-" +
-          list[i].moduleId.split(" ")[0].split("-")[1] + "-" +
-          list[i].moduleId.split(" ")[0].split("-")[2] + "-" +
-          list[i].moduleId.split(" ")[0].split("-")[3]
-
-      );
-
-      print(modCode);
-      print(list.length);
-
-      modTime.add(list[i].startTime);
-
-      print(modTime);
-
-      if (list[i].moduleId.split("-")[4] == 'T' || list[i].moduleId.split("-")[4] == 'LAB') {
-        modType.add("LAB");
+      if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
+        modCode.add(
+            list[i].moduleId.split(" ")[0].split("-")[0] + "-" +
+                list[i].moduleId.split(" ")[0].split("-")[1] + "-" +
+                list[i].moduleId.split(" ")[0].split("-")[2] + "-" +
+                list[i].moduleId.split(" ")[0].split("-")[3]
+        );
       }
+      else if (list[i].moduleId.split(" ")[0].split("-").length == 4) {
+        modCode.add(
+            list[i].moduleId.split(" ")[0].split("-")[0] + "-" +
+                list[i].moduleId.split(" ")[0].split("-")[1]
+        );
+      }
+      modTime.add(list[i].startTime);
+    }
 
-      else {
+    for (int i = 0; i < modCode.length; i++) {
+
+      if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
+
+        if (list[i].moduleId.split("-")[4] == 'T' || list[i].moduleId.split("-")[4] == 'LAB') {
+          modType.add("LAB");
+        } else {
+          modType.add("LECTURE");
+        }
+      }
+      else if (list[i].moduleId.split(" ")[0].split("-").length == 4) {
         modType.add("LECTURE");
       }
 
-      print(modType);
     }
 
     for (int i = 0; i < modCode.length; i++) {
@@ -213,7 +219,11 @@ Future<Map<String, List>> processData() async{
           break;
         }
         if (j == courseList.length - 1 && modCode[i] != courseList[j].subjectCode) {
-          modName.add(modCode[i].toString().split("-").last);
+          if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
+            modName.add(modCode[i].toString().split("-").last);
+          }
+          else if (list[i].moduleId.split(" ")[0].split("-").length == 4)
+          modName.add(modCode[i].toString().split("-")[1]);
         }
       }
     }
@@ -230,7 +240,6 @@ Future<Map<String, List>> processData() async{
 
   }).then((value) {
 
-    print("ok = " + value['name'][0]);
     mMap = value;
 
   });
