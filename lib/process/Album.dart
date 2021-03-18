@@ -17,8 +17,11 @@ class Album {
   final String classCode;
   final String grouping;
   final String color;
+  String shortModule;
+  String classType;
+  String moduleName;
 
-  Album({this.intake, this.moduleId, this.day, this.location, this.room, this.lecturerId, this.lecturerName, this.lecturerAcc, this.date, this.dateIso, this.startTime, this.endTime, this.startTimeIso, this.endTimeIso, this.classCode, this.grouping, this.color});
+  Album({this.intake, this.moduleId, this.day, this.location, this.room, this.lecturerId, this.lecturerName, this.lecturerAcc, this.date, this.dateIso, this.startTime, this.endTime, this.startTimeIso, this.endTimeIso, this.classCode, this.grouping, this.color, this.shortModule, this.classType, this.moduleName});
 
   factory Album.fromJson(Map<String, dynamic> json) {
 
@@ -40,6 +43,9 @@ class Album {
       classCode: json['CLASS_CODE'],
       grouping: json['GROUPING'],
       color: json['COLOR'],
+      shortModule: "-",
+      classType: "-",
+      moduleName: "-",
     );
   }
 }

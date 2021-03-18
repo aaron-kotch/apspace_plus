@@ -1,3 +1,4 @@
+import 'package:apspace_plus/page/main.dart';
 import 'package:apspace_plus/process/Album.dart';
 import 'package:apspace_plus/process/AlbumsList.dart';
 import 'package:apspace_plus/process/Course.dart';
@@ -11,24 +12,35 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 
-List<Course> courseList = [];
-// ignore: must_be_immutable
+List<Course> courseList;
+var date;
+int currPage = 0;
+
 class Home extends StatefulWidget {
+  static Future fetch;
 
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin{
 
-  Future startGet;
-  var cData;
+  int _selectedIndex = 2;
 
   @override
   void initState() {
-    startGet = login();
+    Home.fetch = fetchAlbum(http.Client());
+
     super.initState();
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  var cData;
 
   @override
   Widget build(BuildContext context) {
@@ -101,20 +113,20 @@ class _HomeState extends State<Home> {
                             letterSpacing: 0.25,
                           ),),
                         onPressed: () {
-
+                          checkDate();
                         },
                       ),
                     )
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 2.5.h, bottom: 0.5.h, left: 7.0.w, right: 6.5.w),
+                  padding: EdgeInsets.only(top: 2.5.h, bottom: 1.0.h, left: 7.5.w, right: 6.5.w),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Schedule",
+                    "Upcoming",
                     style: TextStyle(
-                      fontFamily: 'OpenSans',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14.0.sp,
                       letterSpacing: 0,
                     ),
                   ),
@@ -127,7 +139,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(top: 3.0.h, bottom: 4.0.h, left: 3.0.h),
+                      padding: EdgeInsets.only(top: 3.0.h, bottom: 4.0.h, left: 3.0.h, right: 3.0.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -136,22 +148,21 @@ class _HomeState extends State<Home> {
                             child: Text(DateFormat('EEEE, dd MMMM').format(DateTime.now()),
                               style: TextStyle(
                                 color: Colors.grey[900],
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w400,
-                                fontSize: 16,
+                                fontSize: 12.0.sp,
                                 letterSpacing: 0.25,
                               ),
                             ),
                           ),
                           FutureBuilder<List<Album>>(
-                              future: fetchAlbum(http.Client()),
+                              future: Home.fetch,
                               builder: (context, snapshot){
                                 return snapshot.hasData
                                     ? AlbumsList()
                                     : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
+                                        padding: EdgeInsets.only(top: 24, bottom: 24),
+                                        child: Center(child: CircularProgressIndicator()));
                               }),
                         ],
                       ),
@@ -179,7 +190,7 @@ class _HomeState extends State<Home> {
                             letterSpacing: 0.25,
                           ),),
                         onPressed: () {
-                          checkDate();
+                          //checkDate();
                           check();
                         },
                       ),
@@ -193,9 +204,118 @@ class _HomeState extends State<Home> {
     );
   }
 
-  check() {
+  Future check() async {
 
-    print(DateTime.now().day + 2);
+    print("hello");
+
+    Album gList;
+    List<Album> nList = [];
+    var currIndex;
+    var count;
+
+    var bData = await fetchAlbum(http.Client()).then((value) {
+
+      for (var element in value) {
+        if (element.intake == "UC2F2008CS" && element.date == "18-MAR-21") {
+
+          currIndex = value.indexOf(element);
+          print(element.dateIso);
+          gList = element;
+          nList.add(value[currIndex]);
+
+          if (nList.length == 0) {
+            count = 0;
+          }
+          if(nList.length > 0 ) {
+            count = nList.length - 1;
+          }
+
+          print("mod" + nList[count].moduleId);
+          print(count);
+          print("length = " + nList.length.toString());
+
+          //get simplified module code
+          if (element.moduleId.split(" ")[0].split("-").length == 6) {
+            gList.shortModule = element.shortModule.replaceAll(
+                "-",
+                element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                    element.moduleId.split(" ")[0].split("-")[1] + "-" +
+                    element.moduleId.split(" ")[0].split("-")[2] + "-" +
+                    element.moduleId.split(" ")[0].split("-")[3]);
+
+            nList[count].shortModule =
+                element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                element.moduleId.split(" ")[0].split("-")[1] + "-" +
+                element.moduleId.split(" ")[0].split("-")[2] + "-" +
+                element.moduleId.split(" ")[0].split("-")[3];
+
+          }
+          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+            gList.shortModule = element.shortModule.replaceAll(
+                "-",
+                element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                element.moduleId.split(" ")[0].split("-")[1]);
+
+            nList[count].shortModule =
+                element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                element.moduleId.split(" ")[0].split("-")[1];
+          }
+
+          print(nList[count].shortModule);
+
+          //get class type
+          if (element.moduleId.split(" ")[0].split("-").length == 6) {
+
+            if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
+              gList.classType = element.classType.replaceAll("-", "T");
+              nList[count].classType = "T";
+            }
+            else {
+              gList.classType = element.classType.replaceAll("-", "L");
+              nList[count].classType = "L";
+            }
+
+          }
+
+          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+            gList.classType = element.classType.replaceAll("-", "L");
+            nList[count].classType = "L";
+          }
+
+          bool found = false;
+          //get module name
+          for (var e in courseList) {
+
+            if (nList[count].shortModule == e.subjectCode) {
+              found = true;
+              gList.moduleName = element.moduleName.replaceAll("-", e.module);
+              nList[count].moduleName = e.module;
+              break;
+
+            }
+          }
+
+          if (found = false) {
+
+            if (element.moduleId.split(" ")[0].split("-").length == 6) {
+              gList.moduleName = element.moduleName.replaceAll("-", element.shortModule.split("-").last);
+              nList[count].moduleName = element.shortModule.split("-").last;
+            }
+
+            else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+              gList.moduleName = element.moduleName.replaceAll("-", element.shortModule.split("-")[1]);
+              nList[count].moduleName = element.shortModule.split("-")[1];
+            }
+          }
+
+          print("3 = " + nList[count].moduleName);
+
+        }
+
+        // map.add({'code': gList.shortModule, 'name': gList.moduleName, 'time': gList.startTime, 'type': gList.classType, 'location': gList.location});
+
+      }
+    });
 
   }
 }
@@ -245,21 +365,48 @@ Future<http.Response> login() async {
 
 }
 
-checkDate() {
+String getCurrDate() {
+
+  var theDate;
+
+  if (currPage == 0) {
+    theDate = "15-MAR-21";
+  }
+  else if (currPage == 1) {
+    theDate = "16-MAR-21";
+  }
+  else if (currPage == 2) {
+    theDate = "17-MAR-21";
+  }
+  else if (currPage == 3) {
+    theDate = "18-MAR-21";
+  }
+  else if (currPage == 4) {
+    theDate = "19-MAR-21";
+  }
+  return theDate;
+}
+
+checkDate() async {
 
   if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SATURDAY") {
-    print(DateTime.now().day + 2);
+    //add days by 2
+    date = DateFormat('dd-MMM-yy').format(DateTime.now().add(Duration(days: 2))).toUpperCase();
+
   }
   else if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SUNDAY") {
-    print(DateTime.now().day + 1);
+    //add days by 1
+    date = DateFormat('dd-MMM-yy').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
   }
   else {
-    print(DateTime.now().day);
-    print("its weekday");
+
+    date = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase();
   }
 
-  print(DateFormat('MMM-yy').format(DateTime.now()).toUpperCase());
+  if (DateTime.now().weekday == 4) {
+    print(DateTime.now().subtract(Duration(days: 3)).weekday);
+  }
 
 }
 
-//TODO: Navbar, timetable, attendance, apcard.
+//TODO: Navbar (partially done), timetable (partially done), attendance, apcard.

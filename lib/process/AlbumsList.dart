@@ -5,13 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
-List<Album> list = [];
-List modCode = [];
-List modName = [];
-List modType = [];
-List modTime = [];
-List modId = [];
-
 // ignore: must_be_immutable
 class AlbumsList extends StatefulWidget {
   List<Album> albums;
@@ -22,8 +15,11 @@ class AlbumsList extends StatefulWidget {
   _AlbumsListState createState() => _AlbumsListState();
 }
 
-class _AlbumsListState extends State<AlbumsList> {
+class _AlbumsListState extends State<AlbumsList> with AutomaticKeepAliveClientMixin {
   Future pData;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -33,8 +29,8 @@ class _AlbumsListState extends State<AlbumsList> {
 
   @override
   Widget build(BuildContext context) {
-
-    return FutureBuilder<Map<String, List>>(
+    super.build(context);
+    return FutureBuilder<List<Album>>(
       future: pData,
       builder: (context, snapshot) {
         return snapshot.hasData
@@ -46,12 +42,12 @@ class _AlbumsListState extends State<AlbumsList> {
                   child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount:  snapshot.data['time'].length,
+                      itemCount: snapshot.data.length,
                       itemBuilder: (context, index){
-
                         return Container(
-                          padding: EdgeInsets.only(bottom: 3.0.h),
+                          padding: EdgeInsets.only(bottom: 2.0.h),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
@@ -60,78 +56,83 @@ class _AlbumsListState extends State<AlbumsList> {
                                   text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text: snapshot.data['time'][index].toString().split(" ")[0],
+                                          text: snapshot.data[index].startTime.split(" ")[0],
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontFamily: 'OpenSans',
-                                            fontWeight: FontWeight.w200,
-                                            fontSize: 20,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 12.0.sp,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: snapshot.data['time'][index].toString().split(" ")[1],
+                                          text: snapshot.data[index].startTime.split(" ")[1],
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontFamily: 'OpenSans',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10.0.sp,
                                           ),
                                         ),
                                       ]
                                   ),
                                 ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 60.0.w,
-                                    padding: EdgeInsets.only(left: 24, right: 24, bottom: 4),
-                                    child: Text(
-                                      snapshot.data['name'][index],
-                                      //TODO: future builder to place modName
-                                      maxLines: 3,
-                                      style: TextStyle(
-                                        fontFamily: 'OpenSans',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(left: 24, right: 24, bottom: 6),
-                                    width: 60.0.w,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Container(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
+                                          width: 30.0.w,
+                                          padding: EdgeInsets.only(bottom: 4),
                                           child: Text(
-                                            snapshot.data['code'][index],
-                                            maxLines: 2,
+                                            snapshot.data[index].moduleName,
+                                            maxLines: 3,
                                             style: TextStyle(
-                                              fontFamily: 'OpenSans',
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 14,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 10.0.sp,
                                             ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 6),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                child: Text(
+                                                  snapshot.data[index].shortModule,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 8.0.sp,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.only(left: 24, right: 24),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 14.0.w),
                                       child: Material(
-                                          color: snapshot.data['type'][index].toString().contains("LAB")
+                                          color: snapshot.data[index].classType.contains("T")
                                               ? Colors.pink[500]
                                               : Colors.deepPurple[400],
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10)
-                                          ),
+                                          shape: CircleBorder(),
                                           child: Container(
                                             padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
                                             child: Text(
-                                              snapshot.data['type'][index],
+                                              snapshot.data[index].classType,
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily: 'OpenSans',
                                                 fontWeight: FontWeight.w800,
@@ -141,10 +142,12 @@ class _AlbumsListState extends State<AlbumsList> {
                                               ),
                                             ),
                                           )
-                                      )
-                                  )
-                                ],
-                              ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+
                             ],
                           ),
                         );
@@ -159,91 +162,100 @@ class _AlbumsListState extends State<AlbumsList> {
   }
 }
 
-Future<Map<String, List>> processData() async{
+Future<List<Album>> processData() async{
 
-  list.clear();
-  modCode.clear();
-  modName.clear();
-  modTime.clear();
-  var mMap;
+  print("hello");
+
+  List<Album> nList = [];
+  var currIndex;
+  var count;
+
+  bool found = false;
 
   var bData = await fetchAlbum(http.Client()).then((value) {
 
-    for (int i = 0; i < value.length; i++) {
+    for (var element in value) {
+      if (element.intake == "UC2F2008CS" && element.date == "18-MAR-21") {
 
-      if (value[i].intake == "UC2F2008CS" && value[i].date == "16-MAR-21") {
-        list.add(value[i]);
-      }
+        currIndex = value.indexOf(element);
+        print(element.dateIso);
+        nList.add(value[currIndex]);
 
-    }
-
-    for (int i = 0; i < list.length; i++) {
-
-      if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
-        modCode.add(
-            list[i].moduleId.split(" ")[0].split("-")[0] + "-" +
-                list[i].moduleId.split(" ")[0].split("-")[1] + "-" +
-                list[i].moduleId.split(" ")[0].split("-")[2] + "-" +
-                list[i].moduleId.split(" ")[0].split("-")[3]
-        );
-      }
-      else if (list[i].moduleId.split(" ")[0].split("-").length == 4) {
-        modCode.add(
-            list[i].moduleId.split(" ")[0].split("-")[0] + "-" +
-                list[i].moduleId.split(" ")[0].split("-")[1]
-        );
-      }
-      modTime.add(list[i].startTime);
-    }
-
-    for (int i = 0; i < modCode.length; i++) {
-
-      if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
-
-        if (list[i].moduleId.split("-")[4] == 'T' || list[i].moduleId.split("-")[4] == 'LAB') {
-          modType.add("LAB");
-        } else {
-          modType.add("LECTURE");
+        if (nList.length == 0) {
+          count = 0;
         }
-      }
-      else if (list[i].moduleId.split(" ")[0].split("-").length == 4) {
-        modType.add("LECTURE");
-      }
-
-    }
-
-    for (int i = 0; i < modCode.length; i++) {
-      for (int j = 0; j < courseList.length; j++) {
-        if (modCode[i] == courseList[j].subjectCode) {
-          modName.add(courseList[j].module);
-          break;
+        if(nList.length > 0 ) {
+          count = nList.length - 1;
         }
-        if (j == courseList.length - 1 && modCode[i] != courseList[j].subjectCode) {
-          if (list[i].moduleId.split(" ")[0].split("-").length == 6) {
-            modName.add(modCode[i].toString().split("-").last);
+
+        print("mod" + nList[count].moduleId);
+        print(count);
+        print("length = " + nList.length.toString());
+
+        //get simplified module code
+        if (element.moduleId.split(" ")[0].split("-").length == 6) {
+
+          nList[count].shortModule =
+              element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                  element.moduleId.split(" ")[0].split("-")[1] + "-" +
+                  element.moduleId.split(" ")[0].split("-")[2] + "-" +
+                  element.moduleId.split(" ")[0].split("-")[3];
+
+        }
+        else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+
+          nList[count].shortModule =
+              element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                  element.moduleId.split(" ")[0].split("-")[1];
+        }
+
+        print(nList[count].shortModule);
+
+        //get class type
+        if (element.moduleId.split(" ")[0].split("-").length == 6) {
+
+          if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
+            nList[count].classType = "T";
           }
-          else if (list[i].moduleId.split(" ")[0].split("-").length == 4)
-          modName.add(modCode[i].toString().split("-")[1]);
+          else {
+            nList[count].classType = "L";
+          }
+
         }
+
+        else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+          nList[count].classType = "L";
+        }
+
+        //get module name
+        for (var e in courseList) {
+
+          if (nList[count].shortModule == e.subjectCode) {
+            found = true;
+            nList[count].moduleName = e.module;
+            break;
+
+          }
+        }
+
+        if (found = false) {
+
+          if (element.moduleId.split(" ")[0].split("-").length == 6) {
+            nList[count].moduleName = element.shortModule.split("-").last;
+          }
+
+          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+            nList[count].moduleName = element.shortModule.split("-")[1];
+          }
+        }
+
+        print("3 = " + nList[count].moduleName);
+
       }
     }
-
-    Map<String, List> map = {
-      'code': modCode,
-      'name': modName,
-      'type': modType,
-      'list': list,
-      'time': modTime,
-    };
-
-    return map;
-
-  }).then((value) {
-
-    mMap = value;
-
+    return nList;
   });
 
-  return mMap;
+  return bData;
 
 }

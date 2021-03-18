@@ -1,9 +1,17 @@
+import 'package:apspace_plus/page/Attendance.dart';
+import 'package:apspace_plus/page/Menu.dart';
+import 'package:apspace_plus/page/Wallet.dart';
 import 'package:apspace_plus/page/home.dart';
+import 'package:apspace_plus/page/timetable.dart';
+import 'package:apspace_plus/process/getData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+
+Future startGet;
 
 void main() {
   runApp(MyApp());
@@ -145,7 +153,7 @@ class _FrontPageState extends State<FrontPage> {
   Route _toHome() {
 
     return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => Home(),
+        pageBuilder: (context, animation, secondaryAnimation) => Nav(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var begin = Offset(1.0, 0.0);
           var end = Offset.zero;
@@ -160,6 +168,81 @@ class _FrontPageState extends State<FrontPage> {
         }
     );
 
+  }
+}
+
+class Nav extends StatefulWidget {
+  @override
+  _NavState createState() => _NavState();
+}
+
+class _NavState extends State<Nav> {
+
+  int _selectedIndex = 2;
+
+  Widget _body;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    startGet = login();
+    checkDate();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        children: <Widget>[
+          Timetable(),
+          Attendance(),
+          Home(),
+          Wallet(),
+          Menu(),
+        ],
+        index: _selectedIndex,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('lib/images/calendar.png')),
+              label: 'Timetable'
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('lib/images/pie.png')),
+              label: 'Attendance'
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('lib/images/flat apu.png')),
+              label: 'Home',
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('lib/images/wallet.png')),
+              label: 'Wallet'
+          ),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('lib/images/list.png')),
+              label: 'Menu'
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blueAccent[400],
+        selectedFontSize: 8.0.sp,
+        unselectedFontSize: 8.0.sp,
+        unselectedItemColor: Colors.grey[600],
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
 
