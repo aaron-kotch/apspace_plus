@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
 class TTList extends StatefulWidget {
-  static var getDate = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase();
+  static var getDate = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase(); //initial date
 
   @override
   _TTListState createState() => _TTListState();

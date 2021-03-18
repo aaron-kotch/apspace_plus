@@ -21,12 +21,20 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
 
   @override
   void initState() {
-    tabController = TabController(initialIndex: DateTime.now().weekday - 1, length: 5, vsync: this);
+
+    tabController = TabController(
+        initialIndex: DateTime.now().weekday == 6 || DateTime.now().weekday == 7
+        ? 1
+        : DateTime.now().weekday - 1,
+        length: 5,
+        vsync: this);
+
     tabController.addListener(() {
       currPage = tabController.index;
       print("tab = " + currPage.toString());
       TTList.getDate = getCurrDate();
     });
+
     super.initState();
   }
 

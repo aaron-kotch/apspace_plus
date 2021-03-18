@@ -190,8 +190,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                             letterSpacing: 0.25,
                           ),),
                         onPressed: () {
-                          //checkDate();
-                          check();
+                          checkDate();
+                          //check();
                         },
                       ),
                     )
@@ -370,42 +370,47 @@ String getCurrDate() {
   var theDate;
 
   if (currPage == 0) {
-    theDate = "15-MAR-21";
+    theDate = checkDate();
   }
   else if (currPage == 1) {
-    theDate = "16-MAR-21";
+    theDate = checkDate().add(Duration(days: 1));
   }
   else if (currPage == 2) {
-    theDate = "17-MAR-21";
+    theDate = checkDate().add(Duration(days: 2));
   }
   else if (currPage == 3) {
-    theDate = "18-MAR-21";
+    theDate = checkDate().add(Duration(days: 3));
   }
   else if (currPage == 4) {
-    theDate = "19-MAR-21";
+    theDate = checkDate().add(Duration(days: 4));
   }
-  return theDate;
+  return DateFormat('dd-MMM-yy').format(theDate).toUpperCase();
 }
 
-checkDate() async {
+DateTime checkDate() {
 
-  if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SATURDAY") {
-    //add days by 2
-    date = DateFormat('dd-MMM-yy').format(DateTime.now().add(Duration(days: 2))).toUpperCase();
+  if (DateTime.now().weekday == 6) {
+
+    date = DateTime.now().add(Duration(days: 2));
 
   }
-  else if (DateFormat('EEEE').format(DateTime.now()).toUpperCase() == "SUNDAY") {
+  else if (DateTime.now().weekday == 7) {
     //add days by 1
-    date = DateFormat('dd-MMM-yy').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+    date = DateTime.now().add(Duration(days: 1));
   }
   else {
 
-    date = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase();
+    date = DateTime.now().subtract(Duration(days: DateTime.now().weekday)).add(Duration(days: 1));
   }
 
-  if (DateTime.now().weekday == 4) {
-    print(DateTime.now().subtract(Duration(days: 3)).weekday);
-  }
+  print(
+      DateFormat('dd-MMM-yy')
+          .format(DateTime.now()
+          .subtract(Duration(days: DateTime.now().weekday))
+          .add(Duration(days: 1))).toUpperCase()
+  );
+
+  return date;
 
 }
 
