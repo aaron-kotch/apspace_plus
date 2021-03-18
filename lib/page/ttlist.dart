@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
 class TTList extends StatefulWidget {
-  static var getDate;
+  static var getDate = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase();
 
   @override
   _TTListState createState() => _TTListState();
@@ -153,8 +153,8 @@ class _TTListState extends State<TTList> with AutomaticKeepAliveClientMixin {
                     }),
               ))
               : Padding(
-              padding: EdgeInsets.only(top: 24, bottom: 24),
-              child: Center(child: CircularProgressIndicator()));
+                  padding: EdgeInsets.only(top: 24, bottom: 24),
+                  child: Center(child: CircularProgressIndicator()));
         }
     );
   }
@@ -167,8 +167,6 @@ Future<List<Album>> processTTData(var date) async{
   List<Album> nList = [];
   var currIndex;
   var count;
-
-  bool found = false;
 
   var bData = await fetchAlbum(http.Client()).then((value) {
 
@@ -225,6 +223,8 @@ Future<List<Album>> processTTData(var date) async{
           nList[count].classType = "L";
         }
 
+        bool found = false;
+
         //get module name
         courseList.forEach((e) {
           if (nList[count].shortModule == e.subjectCode) {
@@ -235,10 +235,10 @@ Future<List<Album>> processTTData(var date) async{
 
         });
 
-        if (found = false) {
+        if (found == false) {
 
           if (element.moduleId.split(" ")[0].split("-").length == 6) {
-            nList[count].moduleName = element.shortModule.split("-").last;
+            nList[count].moduleName = element.moduleId.split(" ").toString().split("-")[3];
           }
 
           else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
@@ -247,6 +247,7 @@ Future<List<Album>> processTTData(var date) async{
         }
 
         print("3 = " + nList[count].moduleName);
+        print(found);
 
       }
 

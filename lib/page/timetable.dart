@@ -21,7 +21,7 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
 
   @override
   void initState() {
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(initialIndex: DateTime.now().weekday - 1, length: 5, vsync: this);
     tabController.addListener(() {
       currPage = tabController.index;
       print("tab = " + currPage.toString());
@@ -111,12 +111,13 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                 ),
                 Container(
                   alignment: Alignment.topCenter,
-                  padding: EdgeInsets.only(top: 0.5.w, left: 8.0.w, right: 8.0.w),
                   height: 400,
                   child: TabBarView(
                     controller: tabController,
                       children: [
                         Container(
+                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                          alignment: Alignment.topCenter,
                           child: FutureBuilder<List<Album>>(
                               future: Home.fetch,
                               builder: (context, snapshot){
@@ -129,6 +130,8 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                               }),
                         ),
                         Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
                           child: FutureBuilder<List<Album>>(
                               future: Home.fetch,
                               builder: (context, snapshot){
@@ -141,6 +144,8 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                               }),
                         ),
                         Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
                           child: FutureBuilder<List<Album>>(
                               future: Home.fetch,
                               builder: (context, snapshot){
@@ -153,6 +158,8 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                               }),
                         ),
                         Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
                           child: FutureBuilder<List<Album>>(
                               future: Home.fetch,
                               builder: (context, snapshot){
@@ -165,6 +172,8 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                               }),
                         ),
                         Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
                           child: FutureBuilder<List<Album>>(
                               future: Home.fetch,
                               builder: (context, snapshot){

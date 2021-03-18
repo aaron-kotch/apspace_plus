@@ -216,7 +216,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     var bData = await fetchAlbum(http.Client()).then((value) {
 
       for (var element in value) {
-        if (element.intake == "UC2F2008CS" && element.date == "18-MAR-21") {
+        if (element.intake == "UC2F2008CS" && element.date == "15-MAR-21") {
 
           currIndex = value.indexOf(element);
           print(element.dateIso);
@@ -295,7 +295,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             }
           }
 
-          if (found = false) {
+          if (found == false) {
 
             if (element.moduleId.split(" ")[0].split("-").length == 6) {
               gList.moduleName = element.moduleName.replaceAll("-", element.shortModule.split("-").last);
