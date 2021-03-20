@@ -1,4 +1,4 @@
-import 'package:apspace_plus/page/Attendance.dart';
+import 'package:apspace_plus/page/attendance.dart';
 import 'package:apspace_plus/page/Menu.dart';
 import 'package:apspace_plus/page/Wallet.dart';
 import 'package:apspace_plus/page/home.dart';
@@ -209,26 +209,113 @@ class _NavState extends State<Nav> {
         index: _selectedIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('lib/images/calendar.png')),
-              label: 'Timetable'
+            icon:  Container(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                children: [
+                  ImageIcon(AssetImage('lib/images/calendar.png')),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      "Timetable",
+                      style: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            label: 'Timetable',
           ),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('lib/images/pie.png')),
-              label: 'Attendance'
+            icon: Container(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                children: [
+                  ImageIcon(AssetImage('lib/images/pie.png')),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      "Attendance",
+                      style: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            label: 'Attendance',
           ),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('lib/images/flat apu.png')),
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: CircleAvatar(
+                  radius: 20,
+                  child: ImageIcon(
+                    AssetImage('lib/images/flat apu.png'),
+                    size: 20,
+                  ),
+                ),
+              ),
               label: 'Home',
           ),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('lib/images/wallet.png')),
-              label: 'Wallet'
+            icon: Container(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                children: [
+                  ImageIcon(AssetImage('lib/images/wallet.png')),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      "Wallet",
+                      style: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            label: 'Wallet',
           ),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('lib/images/list.png')),
-              label: 'Menu'
+            icon: Container(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageIcon(AssetImage('lib/images/list.png')),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      "Menu",
+                      style: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            label: 'Menu',
           ),
         ],
         currentIndex: _selectedIndex,

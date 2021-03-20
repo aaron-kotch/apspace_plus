@@ -1,7 +1,9 @@
 import 'package:apspace_plus/page/home.dart';
+import 'package:apspace_plus/page/main.dart';
 import 'package:apspace_plus/process/Album.dart';
 import 'package:apspace_plus/process/getData.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,25 +18,28 @@ class AlbumsList extends StatefulWidget {
 }
 
 class _AlbumsListState extends State<AlbumsList> with AutomaticKeepAliveClientMixin {
-  Future pData;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   bool get wantKeepAlive => true;
 
   @override
-  void initState() {
-    pData = processData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder<List<Album>>(
-      future: pData,
+      future: startGet,
       builder: (context, snapshot) {
-        return snapshot.hasData
-            ? AnimatedSwitcher(
+
+        print("hohoehoheoerere " + snapshot.data.toString());
+
+        if (snapshot.data != null) {
+
+          if (snapshot.data.length > 0) {
+            return AnimatedSwitcher(
                 duration: Duration(seconds: 1),
                 child: MediaQuery.removePadding(
                   removeTop: true,
@@ -153,109 +158,58 @@ class _AlbumsListState extends State<AlbumsList> with AutomaticKeepAliveClientMi
                         );
                         //TODO: fetch data using obtained ticket in apspace
                       }),
-            ))
-            : Padding(
-                padding: EdgeInsets.only(top: 24, bottom: 24),
-                child: Center(child: CircularProgressIndicator()));
+                ));
+          }
+          else if (snapshot.data.length == 0) {
+            return Container(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.orange[100],
+                    radius: 20,
+                    backgroundImage: AssetImage('lib/images/check.png'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "You're all caught up",
+                          style: TextStyle(
+                            fontFamily: "OpenSans",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        Text(
+                          "No upcoming events this week",
+                          style: TextStyle(
+                            fontFamily: "OpenSans",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: Colors.grey[700],
+                            letterSpacing: 0.25,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+        }
+
+        return Padding(
+            padding: EdgeInsets.only(top: 24, bottom: 24),
+            child: Center(child: CircularProgressIndicator()));
       }
     );
   }
-}
-
-Future<List<Album>> processData() async{
-
-  print("hello");
-
-  List<Album> nList = [];
-  var currIndex;
-  var count;
-
-  bool found = false;
-
-  var bData = await fetchAlbum(http.Client()).then((value) {
-
-    for (var element in value) {
-      if (element.intake == "UC2F2008CS" && element.date == "18-MAR-21") {
-
-        currIndex = value.indexOf(element);
-        print(element.dateIso);
-        nList.add(value[currIndex]);
-
-        if (nList.length == 0) {
-          count = 0;
-        }
-        if(nList.length > 0 ) {
-          count = nList.length - 1;
-        }
-
-        print("mod" + nList[count].moduleId);
-        print(count);
-        print("length = " + nList.length.toString());
-
-        //get simplified module code
-        if (element.moduleId.split(" ")[0].split("-").length == 6) {
-
-          nList[count].shortModule =
-              element.moduleId.split(" ")[0].split("-")[0] + "-" +
-                  element.moduleId.split(" ")[0].split("-")[1] + "-" +
-                  element.moduleId.split(" ")[0].split("-")[2] + "-" +
-                  element.moduleId.split(" ")[0].split("-")[3];
-
-        }
-        else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-
-          nList[count].shortModule =
-              element.moduleId.split(" ")[0].split("-")[0] + "-" +
-                  element.moduleId.split(" ")[0].split("-")[1];
-        }
-
-        print(nList[count].shortModule);
-
-        //get class type
-        if (element.moduleId.split(" ")[0].split("-").length == 6) {
-
-          if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
-            nList[count].classType = "T";
-          }
-          else {
-            nList[count].classType = "L";
-          }
-
-        }
-
-        else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-          nList[count].classType = "L";
-        }
-
-        //get module name
-        for (var e in courseList) {
-
-          if (nList[count].shortModule == e.subjectCode) {
-            found = true;
-            nList[count].moduleName = e.module;
-            break;
-
-          }
-        }
-
-        if (found = false) {
-
-          if (element.moduleId.split(" ")[0].split("-").length == 6) {
-            nList[count].moduleName = element.shortModule.split("-").last;
-          }
-
-          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-            nList[count].moduleName = element.shortModule.split("-")[1];
-          }
-        }
-
-        print("3 = " + nList[count].moduleName);
-
-      }
-    }
-    return nList;
-  });
-
-  return bData;
-
 }

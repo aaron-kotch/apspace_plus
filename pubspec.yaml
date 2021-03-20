@@ -29,6 +29,7 @@ dependencies:
   sizer: ^1.1.8
   intl: ^0.17.0
   page_transition: ^1.1.7+6
+  hexcolor: ^2.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -72,6 +73,13 @@ flutter:
         - asset: lib/fonts/Montserrat/Montserrat-Bold.ttf
         - asset: lib/fonts/Montserrat/Montserrat-ExtraBold.ttf
         - asset: lib/fonts/Montserrat/Montserrat-Black.ttf
+    - family: Quicksand
+      fonts:
+        - asset: lib/fonts/Quicksand/Quicksand-Light.ttf
+        - asset: lib/fonts/Quicksand/Quicksand-Regular.ttf
+        - asset: lib/fonts/Quicksand/Quicksand-Medium.ttf
+        - asset: lib/fonts/Quicksand/Quicksand-Semibold.ttf
+        - asset: lib/fonts/Quicksand/Quicksand-Bold.ttf
 
   assets:
     - lib/images/

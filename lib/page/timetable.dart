@@ -41,196 +41,127 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-          body: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 4.0.h, left: 8.0.w, right: 4.0.w),
-                  child: Text(
-                    DateFormat('EEEE, dd MMMM').format(DateTime.now()),
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontFamily: 'OpenSans',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 10.0.sp,
-                      letterSpacing: 0.25,
-                    ),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 4.0.h, left: 8.0.w, right: 4.0.w),
+                child: Text(
+                  DateFormat('EEEE, dd MMMM').format(DateTime.now()),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10.0.sp,
+                    letterSpacing: 0.25,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 0.5.w, left: 8.0.w, right: 4.0.w),
-                  child: Text(
-                    "Timetable",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.grey[900],
-                      fontFamily: 'OpenSans',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20.0.sp,
-                      letterSpacing: 0.25,
-                    ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 0.5.w, left: 8.0.w, right: 4.0.w),
+                child: Text(
+                  "Timetable",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[900],
+                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20.0.sp,
+                    letterSpacing: 0.25,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 1.5.h, left: 5.0.w, right: 4.0.w),
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Theme.of(context).canvasColor,
-                        child: TabBar(
-                          controller: tabController,
-                          indicator: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          indicatorPadding: EdgeInsets.only(top: 10, bottom: 10),
-                          isScrollable: true,
-                          unselectedLabelColor: Colors.grey[900],
-                          tabs: [
-                            Tab(
-                                child: Text(
-                                  "Mon",
-                                  maxLines: 1,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 10.0.sp,
-                                    letterSpacing: 0.25,
-                                  ),
-                                )),
-                            Container(
-                                child: Tab(text: "Tue",))
-                            ,
-                            Tab(text: "Wed",),
-                            Tab(text: "Thu",),
-                            Tab(text: "Fri",)
-                          ],
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 1.5.h, left: 5.0.w, right: 4.0.w),
+                child: Column(
+                  children: [
+                    Container(
+                      color: Theme.of(context).canvasColor,
+                      child: TabBar(
+                        controller: tabController,
+                        indicator: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                      )
-                    ],
-                  ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorPadding: EdgeInsets.only(top: 10, bottom: 10),
+                        isScrollable: true,
+                        unselectedLabelColor: Colors.grey[900],
+                        tabs: [
+                          Tab(
+                              child: Text(
+                                "Mon",
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10.0.sp,
+                                  letterSpacing: 0.25,
+                                ),
+                              )),
+                          Container(
+                              child: Tab(text: "Tue",))
+                          ,
+                          Tab(text: "Wed",),
+                          Tab(text: "Thu",),
+                          Tab(text: "Fri",)
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Container(
+              ),
+              Container(
                   alignment: Alignment.topCenter,
                   height: 400,
-                  child: TabBarView(
-                    controller: tabController,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
-                          alignment: Alignment.topCenter,
-                          child: FutureBuilder<List<Album>>(
-                              future: Home.fetch,
-                              builder: (context, snapshot){
-                                return snapshot.hasData
-                                    ? TTList()
-                                    : Padding(
-                                        padding: EdgeInsets.only(top: 24, bottom: 24),
-                                        child: Center(child: CircularProgressIndicator()));
-
-                              }),
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
-                          child: FutureBuilder<List<Album>>(
-                              future: Home.fetch,
-                              builder: (context, snapshot){
-                                return snapshot.hasData
-                                    ? TTList()
-                                    : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
-                              }),
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
-                          child: FutureBuilder<List<Album>>(
-                              future: Home.fetch,
-                              builder: (context, snapshot){
-                                return snapshot.hasData
-                                    ? TTList()
-                                    : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
-                              }),
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
-                          child: FutureBuilder<List<Album>>(
-                              future: Home.fetch,
-                              builder: (context, snapshot){
-                                return snapshot.hasData
-                                    ? TTList()
-                                    : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
-                              }),
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
-                          child: FutureBuilder<List<Album>>(
-                              future: Home.fetch,
-                              builder: (context, snapshot){
-                                return snapshot.hasData
-                                    ? TTList()
-                                    : Padding(
-                                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                                    child: Center(child: CircularProgressIndicator()));
-
-                              }),
-                        ),
-                      ]
-                  ),
-                ),
-              ],
-            ),
+                  child: FutureBuilder<List<List<Album>>>(
+                    future: Home.ttGet,
+                    builder: (context, snapshot) {
+                      return snapshot.hasData
+                          ? TabBarView(
+                          controller: tabController,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                              alignment: Alignment.topCenter,
+                              child: TTList(page: 0),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                              alignment: Alignment.topCenter,
+                              child: TTList(page: 1),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                              alignment: Alignment.topCenter,
+                              child: TTList(page: 2),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                              alignment: Alignment.topCenter,
+                              child: TTList(page: 3),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: 8.0.w, left: 8.0.w, right: 8.0.w),
+                              alignment: Alignment.topCenter,
+                              child: TTList(page: 4),
+                            ),
+                          ]
+                      )
+                          : Padding(
+                          padding: EdgeInsets.only(top: 24, bottom: 24),
+                          child: Center(child: CircularProgressIndicator()));
+                    },
+                  )
+              ),
+            ],
           ),
-        )
+        ),
     );
   }
-}
-
-class CustomTabIndicator extends Decoration {
-
-  @override
-  _CustomPainter createBoxPainter([onChanged]) {
-    return new _CustomPainter(this, onChanged);
-  }
-
-}
-
-class _CustomPainter extends BoxPainter {
-  final CustomTabIndicator decoration;
-
-  _CustomPainter(this.decoration, VoidCallback onChanged)
-      : assert(decoration != null),
-        super(onChanged);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-
-    assert(configuration != null);
-    assert(configuration.size != null);
-
-    final Rect rect = Offset(offset.dx, (configuration.size.height / 2) - indicatorHeight / 2) & Size(configuration.size.width, indicatorHeight);
-    final Paint paint = Paint();
-    paint.color = Colors.blueAccent;
-    paint.style = PaintingStyle.fill;
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(10.0)), paint);
-  }
-
 }
