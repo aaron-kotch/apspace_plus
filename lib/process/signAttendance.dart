@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'file:///C:/Users/aaron/StudioProjects/apspace_plus/lib/page/AlbumsList.dart';
+import 'package:apspace_plus/process/UpdateAttendance.dart';
 import 'package:flutter/foundation.dart';
 import 'Album.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Album>> fetchAlbum(http.Client client) async {
+Future<List<UpdateAttendance>> signAttendance(http.Client client) async {
+
 
   final response = await client.get(Uri.parse('https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable'));
 
@@ -15,8 +16,8 @@ Future<List<Album>> fetchAlbum(http.Client client) async {
   //task: loop to find correct course
 }
 
-List<Album> parseList(String responseBody) {
+List<UpdateAttendance> parseList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<Album>((json) => Album.fromJson(json)).toList();
+  return parsed.map<UpdateAttendance>((json) => UpdateAttendance.fromJson(json)).toList();
 }

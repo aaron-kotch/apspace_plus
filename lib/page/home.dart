@@ -1,7 +1,7 @@
 import 'package:apspace_plus/page/main.dart';
 import 'package:apspace_plus/page/ttlist.dart';
 import 'package:apspace_plus/process/Album.dart';
-import 'package:apspace_plus/process/AlbumsList.dart';
+import 'file:///C:/Users/aaron/StudioProjects/apspace_plus/lib/page/AlbumsList.dart';
 import 'package:apspace_plus/process/Course.dart';
 import 'package:apspace_plus/process/Intake.dart';
 import 'package:apspace_plus/process/getCourse.dart';
@@ -20,16 +20,23 @@ List<Intake> intakeDetailsList;
 List<String> intakeList = [];
 int intakeLengthList;
 List<String> dateList = [];
+List<String> oldDateList = [];
 List<List<Album>> timetableList = [];
+List<int> semList = [];
 
 int currPage = 0;
 String cDate;
 double totalPercent;
 
+var tick;
+
 class Home extends StatefulWidget {
+  List<Album> infoData;
+
   static Future fetch;
   static Future ttGet;
-  static Future<List<Course>> futCourse;
+
+  Home({Key key, this.infoData}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -56,12 +63,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         scrollDirection: Axis.vertical,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Container(
               padding: EdgeInsets.only(top: 12.0.h, bottom: 3.0.h),
@@ -122,7 +131,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         letterSpacing: 0.25,
                       ),),
                     onPressed: () {
-                      checkDate();
+                      Future f = futCourse;
+
+                      f.then((value) => print(value));
                     },
                   ),
                 )
@@ -133,11 +144,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               child: Text(
                 "Upcoming",
                 style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  letterSpacing: 0.15,
-                  color: Colors.grey[800]
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    letterSpacing: 0.15,
+                    color: Colors.grey[800]
                 ),
               ),
             ),
@@ -145,7 +156,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               width: 100.0.w,
               padding: EdgeInsets.only(left: 6.5.w, right: 6.5.w, bottom: 4.0.h),
               child: Card(
-                elevation: 2,
+                elevation: 4,
+                shadowColor: Colors.black.withOpacity(0.35),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -166,166 +178,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           ),
                         ),
                       ),
-                      AlbumsList(),
+                      AlbumsList(albums: widget.infoData,),
                     ],
                   ),
                 ),
               ),
-            ),
-            Container(
-                height: 10.0.h,
-                width: 100.0.w,
-                child: Container(
-                  padding: EdgeInsets.only(left: 6.5.w, top: 8, right: 6.5.w, bottom: 20),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      backgroundColor: Colors.blueAccent[400],
-                    ),
-                    child: Text("Check",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        letterSpacing: 0.25,
-                      ),),
-                    onPressed: () {
-                      checkDate();
-                      //check();
-                    },
-                  ),
-                )
             ),
           ],
         ), //pfp
       ),
     );
   }
-
-  // Future check() async {
-  //
-  //   print("hello");
-  //
-  //   Album gList;
-  //   List<Album> nList = [];
-  //   var currIndex;
-  //   var count;
-  //
-  //   var bData = await fetchAlbum(http.Client()).then((value) {
-  //
-  //     for (var element in value) {
-  //       if (element.intake == "UC2F2008CS" && element.date == "15-MAR-21") {
-  //
-  //         currIndex = value.indexOf(element);
-  //         print(element.dateIso);
-  //         gList = element;
-  //         nList.add(value[currIndex]);
-  //
-  //         if (nList.length == 0) {
-  //           count = 0;
-  //         }
-  //         if(nList.length > 0 ) {
-  //           count = nList.length - 1;
-  //         }
-  //
-  //         print("mod" + nList[count].moduleId);
-  //         print(count);
-  //         print("length = " + nList.length.toString());
-  //
-  //         //get simplified module code
-  //         if (element.moduleId.split(" ")[0].split("-").length == 6) {
-  //           gList.shortModule = element.shortModule.replaceAll(
-  //               "-",
-  //               element.moduleId.split(" ")[0].split("-")[0] + "-" +
-  //                   element.moduleId.split(" ")[0].split("-")[1] + "-" +
-  //                   element.moduleId.split(" ")[0].split("-")[2] + "-" +
-  //                   element.moduleId.split(" ")[0].split("-")[3]);
-  //
-  //           nList[count].shortModule =
-  //               element.moduleId.split(" ")[0].split("-")[0] + "-" +
-  //               element.moduleId.split(" ")[0].split("-")[1] + "-" +
-  //               element.moduleId.split(" ")[0].split("-")[2] + "-" +
-  //               element.moduleId.split(" ")[0].split("-")[3];
-  //
-  //         }
-  //         else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-  //           gList.shortModule = element.shortModule.replaceAll(
-  //               "-",
-  //               element.moduleId.split(" ")[0].split("-")[0] + "-" +
-  //               element.moduleId.split(" ")[0].split("-")[1]);
-  //
-  //           nList[count].shortModule =
-  //               element.moduleId.split(" ")[0].split("-")[0] + "-" +
-  //               element.moduleId.split(" ")[0].split("-")[1];
-  //         }
-  //
-  //         print(nList[count].shortModule);
-  //
-  //         //get class type
-  //         if (element.moduleId.split(" ")[0].split("-").length == 6) {
-  //
-  //           if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
-  //             gList.classType = element.classType.replaceAll("-", "T");
-  //             nList[count].classType = "T";
-  //           }
-  //           else {
-  //             gList.classType = element.classType.replaceAll("-", "L");
-  //             nList[count].classType = "L";
-  //           }
-  //
-  //         }
-  //
-  //         else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-  //           gList.classType = element.classType.replaceAll("-", "L");
-  //           nList[count].classType = "L";
-  //         }
-  //
-  //         bool found = false;
-  //         //get module name
-  //         for (var e in courseList) {
-  //
-  //           if (nList[count].shortModule == e.subjectCode) {
-  //             found = true;
-  //             gList.moduleName = element.moduleName.replaceAll("-", e.module);
-  //             nList[count].moduleName = e.module;
-  //             break;
-  //
-  //           }
-  //         }
-  //
-  //         if (found == false) {
-  //
-  //           if (element.moduleId.split(" ")[0].split("-").length == 6) {
-  //             gList.moduleName = element.moduleName.replaceAll("-", element.shortModule.split("-").last);
-  //             nList[count].moduleName = element.shortModule.split("-").last;
-  //           }
-  //
-  //           else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-  //             gList.moduleName = element.moduleName.replaceAll("-", element.shortModule.split("-")[1]);
-  //             nList[count].moduleName = element.shortModule.split("-")[1];
-  //           }
-  //         }
-  //
-  //         print("3 = " + nList[count].moduleName);
-  //
-  //       }
-  //
-  //       // map.add({'code': gList.shortModule, 'name': gList.moduleName, 'time': gList.startTime, 'type': gList.classType, 'location': gList.location});
-  //
-  //     }
-  //   });
-  //
-  // }
 }
 
 Future<List<Album>> login() async {
 
   List<Album> nList = [];
 
-  var tick;
   var tick1;
   var tick2;
 
@@ -370,9 +239,9 @@ Future<List<Album>> login() async {
 
     return yepList;
 
-  }).then((value) async {
+  }).then((value) {
 
-    Home.futCourse = fetchCourse(http.Client(), value[0]).then((courseRes) {
+    futCourse = fetchCourse(http.Client(), value[0]).then((courseRes) {
 
       courseList = courseRes;
       totalPercent = getPercentage();
@@ -380,32 +249,59 @@ Future<List<Album>> login() async {
 
       return courseList;
 
+    }).then((value) {
+
+      int currSem = 0;
+      semList.clear();
+
+      value.forEach((element) {
+
+        if (currSem == element.semester) {
+          print("identical");
+        }
+        else {
+          semList.add(element.semester);
+          print(element.semester);
+        }
+
+        currSem = element.semester;
+
+      });
+
+      return value;
     });
 
     fetchIntake(http.Client(), value[1]).then((intakeRes) {
 
       intakeDetailsList = intakeRes;
       print("yo");
+      intakeList.clear();
 
       return intakeDetailsList;
 
     }).then((value) {
 
-      intakeList.clear();
-
       value.forEach((element) {
         intakeList.add(element.intakeCode);
+        print(intakeList.toString());
       });
 
     });
 
     getCurrDate();
 
-    return courseList;
+    return futCourse;
 
   }).then((course) async {
 
-    var yes = await fetchAlbum(http.Client()).then((album) {
+    print("courselist = " + course.toString());
+    print(intakeList.toString());
+
+    print(course[0].module);
+
+    var yes = fetchAlbum(http.Client()).then((album) {
+
+      print(album[0].intake);
 
       return album;
 
@@ -420,7 +316,9 @@ Future<List<Album>> login() async {
 
     theList.forEach((element) {
 
-      if (element.intake == "UC2F2008CS" && element.date == DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase()) {
+      if (element.intake == intakeList.first && element.date == DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase()) {
+
+        print("hi");
 
         //TODO: check saturday sunday
 
@@ -502,34 +400,49 @@ Future<List<Album>> login() async {
 
 }
 
-getCurrDate() {
+getCurrDate() async {
 
   DateTime theDate;
+  DateTime oldDate;
+
+  dateList.clear();
+  oldDateList.clear();
 
   if (DateTime.now().weekday == 6) {
 
-    theDate = DateTime.now().subtract(Duration(days: 5));
+    theDate = DateTime.now().add(Duration(days: 2));
+    oldDate = DateTime.now().subtract(Duration(days: 5));
 
   }
   else if (DateTime.now().weekday == 7) {
     //add days by 1
-    theDate = DateTime.now().subtract(Duration(days: 6));
+    theDate = DateTime.now().add(Duration(days: 1));
+    oldDate = DateTime.now().subtract(Duration(days: 6));
+
   }
   else {
 
     theDate = DateTime.now().subtract(Duration(days: DateTime.now().weekday)).add(Duration(days: 1));
+    oldDate = DateTime.now().subtract(Duration(days: DateTime.now().weekday)).add(Duration(days: 1));
+
   }
 
   for (int i = 0; i < 5; i++) {
 
     dateList.add(DateFormat('dd-MMM-yy').format(theDate.add(Duration(days: i))).toUpperCase());
-
+    oldDateList.add(DateFormat('dd-MMM-yy').format(oldDate.add(Duration(days: i))).toUpperCase());
   }
+
+  print("new date = " + dateList.toString());
+  print("old date = " + oldDateList.toString());
 
   int count = 0;
 
+  if (futCourse != null) {
+    await futCourse;
+  }
+
   if (dateList.length == 5 ) {
-    print(dateList.length);
     Home.ttGet = processTTData();
     count++;
   }

@@ -30,6 +30,8 @@ dependencies:
   intl: ^0.17.0
   page_transition: ^1.1.7+6
   hexcolor: ^2.0.3
+  graphql_flutter: ^4.0.1
+  qr_flutter: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -1,10 +1,12 @@
 import 'package:apspace_plus/page/home.dart';
 import 'package:apspace_plus/process/Album.dart';
+import 'package:apspace_plus/process/Course.dart';
 import 'package:apspace_plus/process/getData.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'main.dart';
 
 class TTList extends StatefulWidget {
   static var getDate = DateFormat('dd-MMM-yy').format(DateTime.now()).toUpperCase();
@@ -166,75 +168,160 @@ Future<List<List<Album>>> processTTData() async {
 
 
       value.forEach((element) {
-        if (element.intake == "UC2F2008CS" && element.date == dateList[i]) {
 
-          //TODO: check saturday sunday
+        if (DateTime.now().weekday == 6 || DateTime.now().weekday == 7) {
 
-          currIndex = value.indexOf(element);
-          nList.add(value[currIndex]);
+          if (DateFormat('dd-MMM-yy').parse(
+              element.date[0] + element.date[1] + element.date[2] + element.date[3] + element.date[4].toLowerCase() + element.date[5].toLowerCase() + element.date[6] + element.date[7] + element.date[8])
+              .add(Duration(days: 2)) != null) {
 
-          if (nList.length == 0) {
-            count = 0;
-          }
-          if(nList.length > 0 ) {
-            count = nList.length - 1;
-          }
+            if (element.intake == "UC2F2008CS" && element.date == dateList[i]) {
 
-          //get simplified module code
-          if (element.moduleId.split(" ")[0].split("-").length == 6) {
+              //TODO: check saturday sunday
 
-            nList[count].shortModule =
-                element.moduleId.split(" ")[0].split("-")[0] + "-" +
-                    element.moduleId.split(" ")[0].split("-")[1] + "-" +
-                    element.moduleId.split(" ")[0].split("-")[2] + "-" +
-                    element.moduleId.split(" ")[0].split("-")[3];
+              currIndex = value.indexOf(element);
+              nList.add(value[currIndex]);
 
-          }
-          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+              if (nList.length == 0) {
+                count = 0;
+              }
+              if(nList.length > 0 ) {
+                count = nList.length - 1;
+              }
 
-            nList[count].shortModule =
-                element.moduleId.split(" ")[0].split("-")[0] + "-" +
-                    element.moduleId.split(" ")[0].split("-")[1];
-          }
+              //get simplified module code
+              if (element.moduleId.split(" ")[0].split("-").length == 6) {
 
-          //get class type
-          if (element.moduleId.split(" ")[0].split("-").length == 6) {
+                nList[count].shortModule =
+                    element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                        element.moduleId.split(" ")[0].split("-")[1] + "-" +
+                        element.moduleId.split(" ")[0].split("-")[2] + "-" +
+                        element.moduleId.split(" ")[0].split("-")[3];
 
-            if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
-              nList[count].classType = "T";
+              }
+              else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+
+                nList[count].shortModule =
+                    element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                        element.moduleId.split(" ")[0].split("-")[1];
+              }
+
+              //get class type
+              if (element.moduleId.split(" ")[0].split("-").length == 6) {
+
+                if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
+                  nList[count].classType = "T";
+                }
+                else {
+                  nList[count].classType = "L";
+                }
+
+              }
+
+              else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+                nList[count].classType = "L";
+              }
+
+              bool found = false;
+
+              //get module name
+              courseList.forEach((e) {
+                if (nList[count].shortModule == e.subjectCode) {
+                  found = true;
+                  nList[count].moduleName = e.module;
+
+                }
+
+              });
+
+              if (found == false) {
+
+                if (element.moduleId.split(" ")[0].split("-").length == 6) {
+                  nList[count].moduleName = element.moduleId.split(" ").toString().split("-")[3];
+                }
+
+                else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+                  nList[count].moduleName = element.shortModule.split("-")[1];
+                }
+              }
             }
-            else {
-              nList[count].classType = "L";
-            }
 
           }
 
-          else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-            nList[count].classType = "L";
-          }
+        }
 
-          bool found = false;
+        else {
 
-          //get module name
-          courseList.forEach((e) {
-            if (nList[count].shortModule == e.subjectCode) {
-              found = true;
-              nList[count].moduleName = e.module;
+          if (element.intake == "UC2F2008CS" && element.date == oldDateList[i]) {
 
+            //TODO: check saturday sunday
+
+            currIndex = value.indexOf(element);
+            nList.add(value[currIndex]);
+
+            if (nList.length == 0) {
+              count = 0;
+            }
+            if(nList.length > 0 ) {
+              count = nList.length - 1;
             }
 
-          });
-
-          if (found == false) {
-
+            //get simplified module code
             if (element.moduleId.split(" ")[0].split("-").length == 6) {
-              nList[count].moduleName = element.moduleId.split(" ").toString().split("-")[3];
+
+              nList[count].shortModule =
+                  element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                      element.moduleId.split(" ")[0].split("-")[1] + "-" +
+                      element.moduleId.split(" ")[0].split("-")[2] + "-" +
+                      element.moduleId.split(" ")[0].split("-")[3];
+
+            }
+            else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+
+              nList[count].shortModule =
+                  element.moduleId.split(" ")[0].split("-")[0] + "-" +
+                      element.moduleId.split(" ")[0].split("-")[1];
+            }
+
+            //get class type
+            if (element.moduleId.split(" ")[0].split("-").length == 6) {
+
+              if (element.moduleId.split("-")[4] == 'T' || element.moduleId.split("-")[4] == 'LAB') {
+                nList[count].classType = "T";
+              }
+              else {
+                nList[count].classType = "L";
+              }
+
             }
 
             else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
-              nList[count].moduleName = element.shortModule.split("-")[1];
+              nList[count].classType = "L";
+            }
+
+            bool found = false;
+
+            courseList.forEach((e) {
+              if (nList[count].shortModule == e.subjectCode) {
+                found = true;
+                nList[count].moduleName = e.module;
+
+              }
+
+            });
+            //get module name
+            if (found == false) {
+
+              if (element.moduleId.split(" ")[0].split("-").length == 6) {
+                nList[count].moduleName = element.moduleId.split(" ").toString().split("-")[3];
+              }
+
+              else if (element.moduleId.split(" ")[0].split("-").length == 4 || element.moduleId.split(" ")[0].split("-").length == 3) {
+                nList[count].moduleName = element.shortModule.split("-")[1];
+              }
             }
           }
+
         }
 
       });

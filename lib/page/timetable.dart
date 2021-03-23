@@ -24,7 +24,7 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
 
     tabController = TabController(
         initialIndex: DateTime.now().weekday == 6 || DateTime.now().weekday == 7
-        ? 1
+        ? 0
         : DateTime.now().weekday - 1,
         length: 5,
         vsync: this);
@@ -32,7 +32,6 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
     tabController.addListener(() {
       currPage = tabController.index;
       print("tab = " + currPage.toString());
-      TTList.getDate = getCurrDate();
     });
 
     super.initState();
@@ -42,6 +41,7 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return SafeArea(
         child: Container(
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -80,7 +80,7 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                 child: Column(
                   children: [
                     Container(
-                      color: Theme.of(context).canvasColor,
+                      color: Colors.white,
                       child: TabBar(
                         controller: tabController,
                         indicator: BoxDecoration(
@@ -152,10 +152,10 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
                               child: TTList(page: 4),
                             ),
                           ]
-                      )
+                        )
                           : Padding(
-                          padding: EdgeInsets.only(top: 24, bottom: 24),
-                          child: Center(child: CircularProgressIndicator()));
+                              padding: EdgeInsets.only(top: 24, bottom: 24),
+                              child: Center(child: CircularProgressIndicator()));
                     },
                   )
               ),
@@ -165,3 +165,5 @@ class _TimetableState extends State<Timetable> with SingleTickerProviderStateMix
     );
   }
 }
+
+//TODO: fix next week timetable
