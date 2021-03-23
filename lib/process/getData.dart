@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'file:///C:/Users/aaron/StudioProjects/apspace_plus/lib/page/AlbumsList.dart';
 import 'package:flutter/foundation.dart';
 import 'Album.dart';
 import 'package:http/http.dart' as http;
