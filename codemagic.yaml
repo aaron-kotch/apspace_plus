@@ -7,7 +7,7 @@ workflows:
     name: Flutter iOS build
     scripts:
       - name: Build for iOS
-        script: flutter build ios --release --no-codesign
+        script: flutter build ios --release --no-codesign lib/page/main.dart
     publishing:
       email:
         recipients:
