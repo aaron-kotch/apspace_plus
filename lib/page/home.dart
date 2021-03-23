@@ -1,7 +1,7 @@
 import 'package:apspace_plus/page/main.dart';
 import 'package:apspace_plus/page/ttlist.dart';
 import 'package:apspace_plus/process/Album.dart';
-import 'file:///C:/Users/aaron/StudioProjects/apspace_plus/lib/page/AlbumsList.dart';
+import 'AlbumsList.dart';
 import 'package:apspace_plus/process/Course.dart';
 import 'package:apspace_plus/process/Intake.dart';
 import 'package:apspace_plus/process/getCourse.dart';
