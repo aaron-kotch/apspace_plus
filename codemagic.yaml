@@ -4,10 +4,10 @@
 
 workflows:
   example-workflow:
-    name: Example Workflow
+    name: Flutter iOS build
     scripts:
-      - name: Step name
-        script: echo "Hello Codemagician!"
+      - name: Build for iOS
+        script: flutter build ios --release --no-codesign
     publishing:
       email:
         recipients:
