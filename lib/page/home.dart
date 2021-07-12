@@ -212,7 +212,7 @@ Future<List<Album>> login() async {
   List<Album> loginReq = await http.post(
       link,
       headers: <String, String>{'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: {'username': 'tp051733', 'password': 'kokotch12'}).then((http.Response response) {
+      body: {'username': 'tp051733', 'password': 'password'}).then((http.Response response) { //hid password.
 
     print(response.headers['location'].split('/').reversed.first);
     tick = response.headers['location'].split('/').reversed.first;
