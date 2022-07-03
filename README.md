@@ -1,5 +1,4 @@
 # apspace_plus
 
-A better APSpace
+A redesigned APSpace
 
-## Monke
